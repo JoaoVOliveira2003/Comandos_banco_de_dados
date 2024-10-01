@@ -192,3 +192,19 @@ INNER JOIN: Retorna registros com correspondência em ambas as tabelas.
 LEFT JOIN: Retorna todos os registros da tabela à esquerda e registros correspondentes da tabela à direita; se não houver correspondência, retorna NULL.
 RIGHT JOIN: Retorna todos os registros da tabela à direita e registros correspondentes da tabela à esquerda; se não houver correspondência, retorna NULL.
 FULL OUTER JOIN: Retorna todos os registros quando há uma correspondência em uma das tabelas (não suportado diretamente no MySQL, mas pode ser simulado).
+
+---------------------------------------------------------------------
+--Conseguir informaçoes de uma tabela:
+sp_help nome_Tabela
+
+--Pega um dado,se acabar com final '.com' vai para uma coluna 'contato_correto' se não for ira 'contato_errado'
+CASE
+    WHEN contato IS NULL THEN NULL
+    WHEN contato LIKE '%.com' THEN contato
+    ELSE NULL 
+END AS contato_correto,
+CASE 
+    WHEN contato IS NULL THEN NULL
+    WHEN contato LIKE '%.com' THEN NULL
+    ELSE contato
+END AS contato_errado,
