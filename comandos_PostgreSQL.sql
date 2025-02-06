@@ -82,3 +82,26 @@ CREATE USER meu_usuario WITH PASSWORD 'minha_senha';
 
 -- Conceder permissão a um usuário
 GRANT ALL PRIVILEGES ON DATABASE nome_do_banco TO meu_usuario;
+
+
+-----------------------------------------
+SELECT
+    p.id_cliente AS ID_Cliente,
+    p.nome_cliente AS Nome_Cliente,
+    p.status AS Status_Cliente,
+    c.tipo_comentario AS "Tipo Comentário",
+    d.nome_departamento AS "Departamento",
+    t.valor_investido AS "Valor Investido",
+    t.valor_retornado AS "Valor Retornado",
+    CASE WHEN c.tipo_comentario = 'Avaliacao de Serviço' THEN f.nome_departamento ELSE NULL END AS "Departamento Anterior",
+    CASE WHEN c.tipo_comentario = 'Avaliacao de Serviço' THEN g.nome_departamento ELSE NULL END AS "Novo Departamento",
+    t.data_atividade AS "Data da Atividade"
+FROM atividades t
+INNER JOIN clientes p ON p.id_cliente = t.id_cliente
+INNER JOIN comentarios c ON c.id_comentario = t.id_comentario
+INNER JOIN departamentos d ON d.id_departamento = p.id_departamento_cliente
+LEFT JOIN departamentos f ON f.id_departamento = CASE WHEN c.tipo_comentario = 'Avaliacao de Serviço' AND t.valor_investido ~ '^[0-9]+$' THEN t.valor_investido::INTEGER ELSE NULL END
+LEFT JOIN departamentos g ON g.id_departamento = CASE WHEN c.tipo_comentario = 'Avaliacao de Serviço' AND t.valor_retornado ~ '^[0-9]+$' THEN t.valor_retornado::INTEGER ELSE NULL END
+WHERE t.data_atividade BETWEEN '2023-01-01 00:00:00' AND '2023-12-30 23:59:59'
+ORDER BY d.nome_departamento, p.nome_cliente, c.tipo_comentario;
+
