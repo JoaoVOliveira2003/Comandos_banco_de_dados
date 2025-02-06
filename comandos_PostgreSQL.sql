@@ -51,6 +51,10 @@ DELETE FROM pessoa WHERE nome = 'João';
 -- Selecionar todos os registros
 SELECT * FROM pessoa;
 
+-- Selecionar todos os atributos da tabela, porém 10.
+SELECT * FROM minha_tabela LIMIT 10;
+
+
 -- Selecionar campos específicos
 SELECT nome, email FROM pessoa;
 
